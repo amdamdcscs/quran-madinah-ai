@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, BookOpen, Menu, X, Bookmark, BookmarkCheck, Navigation, Search, MoreHorizontal } from 'lucide-react';
+import { ChevronLeft, ChevronRight, BookOpen, Menu, X, Bookmark, BookmarkCheck, Navigation, Search, MoreHorizontal, Moon, Sun } from 'lucide-react';
 import { useBookmarks } from '../hooks/useBookmarks';
+import { useDarkMode } from '../hooks/useDarkMode';
 import BookmarkModal from './BookmarkModal';
 import GoToPageModal from './GoToPageModal';
 import SearchModal from './SearchModal';
@@ -34,6 +35,8 @@ const QuranPage: React.FC<QuranPageProps> = ({
     isBookmarked, 
     getBookmarkForPage 
   } = useBookmarks();
+  
+  const { isDarkMode, toggleDarkMode } = useDarkMode();
 
   useEffect(() => {
     setImageLoaded(false);
@@ -189,6 +192,19 @@ const QuranPage: React.FC<QuranPageProps> = ({
               <Search size={20} />
               <span>بحث</span>
             </button>
+
+            <button
+              onClick={toggleDarkMode}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg backdrop-blur-sm ${
+                isDarkMode 
+                  ? 'bg-yellow-600/90 text-white hover:bg-yellow-700/90' 
+                  : 'bg-gray-700/90 text-white hover:bg-gray-800/90'
+              }`}
+              title={isDarkMode ? 'الوضع النهاري' : 'الوضع الليلي'}
+            >
+              {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+              <span>{isDarkMode ? 'نهاري' : 'ليلي'}</span>
+            </button>
           </div>
           
           <div className="flex items-center gap-4">
@@ -289,6 +305,21 @@ const QuranPage: React.FC<QuranPageProps> = ({
               <Search size={20} />
               <span>البحث في القرآن</span>
             </button>
+
+            <button
+              onClick={() => {
+                toggleDarkMode();
+                setShowMobileMenu(false);
+              }}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg active:scale-95 transition-all duration-200 backdrop-blur-sm ${
+                isDarkMode 
+                  ? 'bg-yellow-600/90 text-white' 
+                  : 'bg-gray-700/90 text-white'
+              }`}
+            >
+              {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+              <span>{isDarkMode ? 'الوضع النهاري' : 'الوضع الليلي'}</span>
+            </button>
           </div>
         )}
       </header>
@@ -297,24 +328,48 @@ const QuranPage: React.FC<QuranPageProps> = ({
       <main className="flex-1 flex items-center justify-center p-2 sm:p-4 lg:p-4">
         <div className="relative w-full max-w-4xl">
           {/* Page Image Container */}
-          <div className="relative bg-white rounded-lg sm:rounded-2xl shadow-xl sm:shadow-2xl overflow-hidden border border-emerald-200">
+          <div className={`relative rounded-lg sm:rounded-2xl shadow-xl sm:shadow-2xl overflow-hidden border transition-all duration-300 ${
+            isDarkMode 
+              ? 'bg-gray-900 border-gray-700' 
+              : 'bg-white border-emerald-200'
+          }`}>
             {!imageLoaded && !imageError && (
-              <div className="aspect-[3/4] flex items-center justify-center bg-gradient-to-br from-emerald-100 to-teal-100">
+              <div className={`aspect-[3/4] flex items-center justify-center transition-all duration-300 ${
+                isDarkMode 
+                  ? 'bg-gradient-to-br from-gray-800 to-gray-900' 
+                  : 'bg-gradient-to-br from-emerald-100 to-teal-100'
+              }`}>
                 <div className="text-center">
-                  <div className="animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
-                  <p className="text-emerald-700 font-medium text-sm sm:text-base">جاري تحميل الصفحة...</p>
+                  <div className={`animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-b-2 mx-auto mb-4 ${
+                    isDarkMode ? 'border-emerald-400' : 'border-emerald-600'
+                  }`}></div>
+                  <p className={`font-medium text-sm sm:text-base ${
+                    isDarkMode ? 'text-emerald-400' : 'text-emerald-700'
+                  }`}>جاري تحميل الصفحة...</p>
                 </div>
               </div>
             )}
             
             {imageError && (
-              <div className="aspect-[3/4] flex items-center justify-center bg-gradient-to-br from-red-50 to-red-100">
+              <div className={`aspect-[3/4] flex items-center justify-center transition-all duration-300 ${
+                isDarkMode 
+                  ? 'bg-gradient-to-br from-red-900/20 to-red-800/20' 
+                  : 'bg-gradient-to-br from-red-50 to-red-100'
+              }`}>
                 <div className="text-center">
-                  <X size={32} className="text-red-500 mx-auto mb-4 sm:w-12 sm:h-12" />
-                  <p className="text-red-700 font-medium text-sm sm:text-base">خطأ في تحميل الصفحة</p>
+                  <X size={32} className={`mx-auto mb-4 sm:w-12 sm:h-12 ${
+                    isDarkMode ? 'text-red-400' : 'text-red-500'
+                  }`} />
+                  <p className={`font-medium text-sm sm:text-base ${
+                    isDarkMode ? 'text-red-400' : 'text-red-700'
+                  }`}>خطأ في تحميل الصفحة</p>
                   <button 
                     onClick={() => window.location.reload()}
-                    className="mt-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm"
+                    className={`mt-2 px-4 py-2 rounded-lg transition-colors text-sm ${
+                      isDarkMode 
+                        ? 'bg-red-600/80 text-white hover:bg-red-700/80' 
+                        : 'bg-red-600 text-white hover:bg-red-700'
+                    }`}
                   >
                     إعادة المحاولة
                   </button>
@@ -326,8 +381,10 @@ const QuranPage: React.FC<QuranPageProps> = ({
               src={`${import.meta.env.BASE_URL}quran_pages/${formatPageNumber(currentPage)}.png`}
               //src={`./quran_pages/${formatPageNumber(currentPage)}.png`}
               alt={`صفحة ${currentPage} من القرآن الكريم`}
-              className={`w-full h-auto transition-opacity duration-300 ${
+              className={`w-full h-auto transition-all duration-300 ${
                 imageLoaded ? 'opacity-100' : 'opacity-0'
+              } ${
+                isDarkMode ? 'filter invert' : ''
               }`}
               onLoad={() => setImageLoaded(true)}
               onError={() => setImageError(true)}
@@ -341,23 +398,31 @@ const QuranPage: React.FC<QuranPageProps> = ({
             <button
               onClick={handleNextPage}
               disabled={currentPage >= totalPages}
-              className={`hidden lg:block absolute left-4 top-1/2 -translate-y-1/2 bg-white/70 backdrop-blur-sm p-3 rounded-full shadow-lg border border-emerald-200/50 hover:bg-emerald-50/70 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:scale-110 ${
+              className={`hidden lg:block absolute left-4 top-1/2 -translate-y-1/2 backdrop-blur-sm p-3 rounded-full shadow-lg border disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:scale-110 ${
+                isDarkMode 
+                  ? 'bg-gray-800/70 border-gray-600/50 hover:bg-gray-700/70' 
+                  : 'bg-white/70 border-emerald-200/50 hover:bg-emerald-50/70'
+              } ${
                 showControls ? 'opacity-100' : 'opacity-0 pointer-events-none'
               }`}
               title="الصفحة التالية"
             >
-              < ChevronLeft size={24} className="text-emerald-700" />
+              <ChevronLeft size={24} className={isDarkMode ? 'text-emerald-400' : 'text-emerald-700'} />
             </button>
 
             <button
               onClick={handlePrevPage}
               disabled={currentPage <= 1}
-              className={`hidden lg:block absolute right-4 top-1/2 -translate-y-1/2 bg-white/70 backdrop-blur-sm p-3 rounded-full shadow-lg border border-emerald-200/50 hover:bg-emerald-50/70 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:scale-110 ${
+              className={`hidden lg:block absolute right-4 top-1/2 -translate-y-1/2 backdrop-blur-sm p-3 rounded-full shadow-lg border disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:scale-110 ${
+                isDarkMode 
+                  ? 'bg-gray-800/70 border-gray-600/50 hover:bg-gray-700/70' 
+                  : 'bg-white/70 border-emerald-200/50 hover:bg-emerald-50/70'
+              } ${
                 showControls ? 'opacity-100' : 'opacity-0 pointer-events-none'
               }`}
               title="الصفحة السابقة"
             >
-              <ChevronRight  size={24} className="text-emerald-700" />
+              <ChevronRight size={24} className={isDarkMode ? 'text-emerald-400' : 'text-emerald-700'} />
             </button>
 
           </div>
