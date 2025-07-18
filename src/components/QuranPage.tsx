@@ -216,8 +216,9 @@ const QuranPage: React.FC<QuranPageProps> = ({
               <div className="text-center">
                 <div className="text-sm">صفحة {currentPage} من {totalPages}</div>
                 {juzHizbInfo && (
-                  <div className="text-xs text-emerald-600 mt-1">
-                    الجزء {getJuzName(juzHizbInfo.juz)} • الحزب {getArabicNumber(juzHizbInfo.hizb)}
+                  <div className="text-xs text-emerald-600 mt-1 leading-relaxed">
+                    <div>الجزء {getJuzName(juzHizbInfo.juz)}</div>
+                    <div>الحزب {getArabicNumber(juzHizbInfo.hizb)}</div>
                   </div>
                 )}
               </div>
@@ -247,8 +248,9 @@ const QuranPage: React.FC<QuranPageProps> = ({
               <BookOpen size={14} className="text-emerald-600" />
               <span className="text-emerald-800 text-sm font-medium">صفحة {currentPage}</span>
               {juzHizbInfo && (
-                <div className="text-xs text-emerald-600 mt-1">
-                  ج{getArabicNumber(juzHizbInfo.juz)} • ح{getArabicNumber(juzHizbInfo.hizb)}
+                <div className="text-xs text-emerald-600 mt-1 leading-tight">
+                  <div>الجزء {getJuzName(juzHizbInfo.juz)}</div>
+                  <div>الحزب {getArabicNumber(juzHizbInfo.hizb)}</div>
                 </div>
               )}
             </div>
@@ -506,8 +508,10 @@ const QuranPage: React.FC<QuranPageProps> = ({
               <span className="text-emerald-600">{totalPages}</span>
             </div>
             {juzHizbInfo && (
-              <div className="text-xs text-emerald-600 mt-1">
-                الجزء {getJuzName(juzHizbInfo.juz)} • الحزب {getArabicNumber(juzHizbInfo.hizb)}
+              <div className="text-xs text-emerald-600 mt-1 leading-relaxed">
+                <div>الجزء {getJuzName(juzHizbInfo.juz)}</div>
+                <div>الحزب {getArabicNumber(juzHizbInfo.hizb)}</div>
+                <div>الحزب {getArabicNumber(juzHizbInfo.hizb)}</div>
               </div>
             )}
           </div>
