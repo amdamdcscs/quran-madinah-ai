@@ -36,7 +36,7 @@ const QuranPage: React.FC<QuranPageProps> = ({
     getBookmarkForPage 
   } = useBookmarks();
   
-  const { isDarkMode, toggleDarkMode } = useDarkMode();
+  const { isDarkMode, darkModeStyle, toggleDarkMode, cycleDarkModeStyle } = useDarkMode();
 
   useEffect(() => {
     setImageLoaded(false);
@@ -205,6 +205,21 @@ const QuranPage: React.FC<QuranPageProps> = ({
               {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
               <span>{isDarkMode ? 'وضع نهاري' : 'وضع ليلي'}</span>
             </button>
+
+            {isDarkMode && (
+              <button
+                onClick={cycleDarkModeStyle}
+                className="flex items-center gap-2 px-4 py-2 bg-indigo-600/90 text-white rounded-lg hover:bg-indigo-700/90 transition-all duration-200 shadow-md hover:shadow-lg backdrop-blur-sm"
+                title="تغيير نمط الوضع الليلي"
+              >
+                <div className="w-4 h-4 rounded-full bg-gradient-to-r from-amber-400 to-orange-500"></div>
+                <span>نمط {
+                  darkModeStyle === 'sepia' ? 'دافئ' :
+                  darkModeStyle === 'invert' ? 'كلاسيكي' :
+                  darkModeStyle === 'blue' ? 'أزرق' : 'عنبري'
+                }</span>
+              </button>
+            )}
           </div>
           
           <div className="flex items-center gap-4">
@@ -320,6 +335,23 @@ const QuranPage: React.FC<QuranPageProps> = ({
               {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
               <span>{isDarkMode ? 'الوضع النهاري' : 'الوضع الليلي'}</span>
             </button>
+
+            {isDarkMode && (
+              <button
+                onClick={() => {
+                  cycleDarkModeStyle();
+                  setShowMobileMenu(false);
+                }}
+                className="w-full flex items-center gap-3 px-4 py-3 bg-indigo-600/90 text-white rounded-lg active:scale-95 transition-all duration-200 backdrop-blur-sm"
+              >
+                <div className="w-5 h-5 rounded-full bg-gradient-to-r from-amber-400 to-orange-500"></div>
+                <span>تغيير نمط القراءة - {
+                  darkModeStyle === 'sepia' ? 'دافئ' :
+                  darkModeStyle === 'invert' ? 'كلاسيكي' :
+                  darkModeStyle === 'blue' ? 'أزرق' : 'عنبري'
+                }</span>
+              </button>
+            )}
           </div>
         )}
       </header>
@@ -384,7 +416,7 @@ const QuranPage: React.FC<QuranPageProps> = ({
               className={`w-full h-auto transition-all duration-300 ${
                 imageLoaded ? 'opacity-100' : 'opacity-0'
               } ${
-                isDarkMode ? 'quran-dark-mode' : ''
+                isDarkMode ? `quran-dark-mode-${darkModeStyle}` : ''
               }`}
               onLoad={() => setImageLoaded(true)}
               onError={() => setImageError(true)}

@@ -2,30 +2,54 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Dark mode styling for Quran pages */
-.quran-dark-mode {
-  /* Enhanced filter combination for better dark mode appearance */
+/* Enhanced Dark mode styling for Quran pages */
+.quran-dark-mode-sepia {
+  /* Sepia-based dark mode - warm and comfortable */
   filter: 
-    invert(1)           /* Invert colors */
-    hue-rotate(180deg)  /* Restore original hue for decorative elements */
-    contrast(0.9)       /* Slightly reduce contrast for softer appearance */
-    brightness(0.95)    /* Slightly dim for comfortable reading */
-    saturate(0.8);      /* Reduce saturation for less harsh colors */
+    invert(1)
+    sepia(0.3)
+    hue-rotate(180deg)
+    contrast(0.85)
+    brightness(0.9)
+    saturate(0.7);
   
-  /* Smooth transition when toggling modes */
   transition: filter 0.3s ease-in-out;
 }
 
-/* Alternative: More sophisticated dark mode with sepia tone */
-@media (prefers-color-scheme: dark) {
-  .quran-dark-mode-sepia {
-    filter: 
-      invert(1)
-      sepia(0.1)          /* Add slight warm tone */
-      hue-rotate(180deg)
-      contrast(0.85)
-      brightness(0.9)
-      saturate(0.7);
-    transition: filter 0.3s ease-in-out;
-  }
+.quran-dark-mode-invert {
+  /* Classic invert with enhanced readability */
+  filter: 
+    invert(1)
+    hue-rotate(180deg)
+    contrast(0.9)
+    brightness(0.95)
+    saturate(0.8);
+  
+  transition: filter 0.3s ease-in-out;
+}
+
+.quran-dark-mode-blue {
+  /* Blue-tinted dark mode for reduced eye strain */
+  filter: 
+    invert(1)
+    hue-rotate(200deg)
+    contrast(0.8)
+    brightness(0.85)
+    saturate(0.6)
+    sepia(0.1);
+  
+  transition: filter 0.3s ease-in-out;
+}
+
+.quran-dark-mode-warm {
+  /* Warm amber-tinted mode for evening reading */
+  filter: 
+    invert(1)
+    hue-rotate(160deg)
+    contrast(0.8)
+    brightness(0.88)
+    saturate(0.9)
+    sepia(0.4);
+  
+  transition: filter 0.3s ease-in-out;
 }
