@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, BookOpen, Menu, X, Bookmark, BookmarkCheck, Navigation, Search, MoreHorizontal, Moon, Sun } from 'lucide-react';
 import { useBookmarks } from '../hooks/useBookmarks';
 import { useDarkMode } from '../hooks/useDarkMode';
+import { getJuzHizbInfo, getJuzName, getArabicNumber } from '../data/juzHizbData';
 import BookmarkModal from './BookmarkModal';
 import GoToPageModal from './GoToPageModal';
 import SearchModal from './SearchModal';
@@ -37,6 +38,9 @@ const QuranPage: React.FC<QuranPageProps> = ({
   } = useBookmarks();
   
   const { isDarkMode, toggleDarkMode } = useDarkMode();
+
+  // Get Juz and Hizb info for current page
+  const juzHizbInfo = getJuzHizbInfo(currentPage);
 
   useEffect(() => {
     setImageLoaded(false);
@@ -208,8 +212,15 @@ const QuranPage: React.FC<QuranPageProps> = ({
           </div>
           
           <div className="flex items-center gap-4">
-            <div className="text-emerald-800 font-medium bg-white/70 px-3 py-1 rounded-lg backdrop-blur-sm">
-              صفحة {currentPage} من {totalPages}
+            <div className="text-emerald-800 font-medium bg-white/70 px-3 py-2 rounded-lg backdrop-blur-sm">
+              <div className="text-center">
+                <div className="text-sm">صفحة {currentPage} من {totalPages}</div>
+                {juzHizbInfo && (
+                  <div className="text-xs text-emerald-600 mt-1">
+                    الجزء {getJuzName(juzHizbInfo.juz)} • الحزب {getArabicNumber(juzHizbInfo.hizb)}
+                  </div>
+                )}
+              </div>
             </div>
             <div className="flex items-center gap-2 bg-emerald-100/70 px-3 py-1 rounded-full backdrop-blur-sm">
               <BookOpen size={16} className="text-emerald-600" />
@@ -232,9 +243,14 @@ const QuranPage: React.FC<QuranPageProps> = ({
               <MoreHorizontal size={20} />
             </button>
             
-            <div className="flex items-center gap-2 bg-emerald-100/70 px-3 py-1 rounded-full backdrop-blur-sm">
+            <div className="flex flex-col items-center bg-emerald-100/70 px-3 py-2 rounded-lg backdrop-blur-sm">
               <BookOpen size={14} className="text-emerald-600" />
               <span className="text-emerald-800 text-sm font-medium">صفحة {currentPage}</span>
+              {juzHizbInfo && (
+                <div className="text-xs text-emerald-600 mt-1">
+                  ج{getArabicNumber(juzHizbInfo.juz)} • ح{getArabicNumber(juzHizbInfo.hizb)}
+                </div>
+              )}
             </div>
 
             <button
@@ -444,9 +460,18 @@ const QuranPage: React.FC<QuranPageProps> = ({
           </button>
           
           <div className="flex items-center gap-2 px-4 py-2 bg-emerald-100/70 rounded-lg min-w-[80px] justify-center backdrop-blur-sm">
-            <span className="text-emerald-800 font-medium text-sm">{currentPage}</span>
-            <span className="text-emerald-600 text-sm">/</span>
-            <span className="text-emerald-600 text-sm">{totalPages}</span>
+            <div className="text-center">
+              <div className="flex items-center gap-1">
+                <span className="text-emerald-800 font-medium text-sm">{currentPage}</span>
+                <span className="text-emerald-600 text-sm">/</span>
+                <span className="text-emerald-600 text-sm">{totalPages}</span>
+              </div>
+              {juzHizbInfo && (
+                <div className="text-xs text-emerald-600 mt-1">
+                  ج{getArabicNumber(juzHizbInfo.juz)} • ح{getArabicNumber(juzHizbInfo.hizb)}
+                </div>
+              )}
+            </div>
           </div>
           
           <button
@@ -474,10 +499,17 @@ const QuranPage: React.FC<QuranPageProps> = ({
             <span>السابقة</span>
           </button>
           
-          <div className="flex items-center gap-2 px-4 py-2 bg-emerald-100/70 rounded-lg backdrop-blur-sm">
-            <span className="text-emerald-800 font-medium">{currentPage}</span>
-            <span className="text-emerald-600">/</span>
-            <span className="text-emerald-600">{totalPages}</span>
+          <div className="text-center px-4 py-2 bg-emerald-100/70 rounded-lg backdrop-blur-sm">
+            <div className="flex items-center gap-2">
+              <span className="text-emerald-800 font-medium">{currentPage}</span>
+              <span className="text-emerald-600">/</span>
+              <span className="text-emerald-600">{totalPages}</span>
+            </div>
+            {juzHizbInfo && (
+              <div className="text-xs text-emerald-600 mt-1">
+                الجزء {getJuzName(juzHizbInfo.juz)} • الحزب {getArabicNumber(juzHizbInfo.hizb)}
+              </div>
+            )}
           </div>
           
           <button
