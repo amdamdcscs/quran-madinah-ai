@@ -1,3 +1,31 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Dark mode styling for Quran pages */
+.quran-dark-mode {
+  /* Enhanced filter combination for better dark mode appearance */
+  filter: 
+    invert(1)           /* Invert colors */
+    hue-rotate(180deg)  /* Restore original hue for decorative elements */
+    contrast(0.9)       /* Slightly reduce contrast for softer appearance */
+    brightness(0.95)    /* Slightly dim for comfortable reading */
+    saturate(0.8);      /* Reduce saturation for less harsh colors */
+  
+  /* Smooth transition when toggling modes */
+  transition: filter 0.3s ease-in-out;
+}
+
+/* Alternative: More sophisticated dark mode with sepia tone */
+@media (prefers-color-scheme: dark) {
+  .quran-dark-mode-sepia {
+    filter: 
+      invert(1)
+      sepia(0.1)          /* Add slight warm tone */
+      hue-rotate(180deg)
+      contrast(0.85)
+      brightness(0.9)
+      saturate(0.7);
+    transition: filter 0.3s ease-in-out;
+  }
+}

@@ -203,7 +203,7 @@ const QuranPage: React.FC<QuranPageProps> = ({
               title={isDarkMode ? 'الوضع النهاري' : 'الوضع الليلي'}
             >
               {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
-              <span>{isDarkMode ? 'نهاري' : 'ليلي'}</span>
+              <span>{isDarkMode ? 'وضع نهاري' : 'وضع ليلي'}</span>
             </button>
           </div>
           
@@ -384,7 +384,7 @@ const QuranPage: React.FC<QuranPageProps> = ({
               className={`w-full h-auto transition-all duration-300 ${
                 imageLoaded ? 'opacity-100' : 'opacity-0'
               } ${
-                isDarkMode ? 'filter invert' : ''
+                isDarkMode ? 'quran-dark-mode' : ''
               }`}
               onLoad={() => setImageLoaded(true)}
               onError={() => setImageError(true)}
