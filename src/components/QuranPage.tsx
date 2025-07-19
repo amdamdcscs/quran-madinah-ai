@@ -29,6 +29,10 @@ const QuranPage: React.FC<QuranPageProps> = ({
   const [showControls, setShowControls] = useState(true);
   const [hideControlsTimeout, setHideControlsTimeout] = useState<NodeJS.Timeout | null>(null);
   
+  // Touch/swipe state
+  const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null);
+  const [touchEnd, setTouchEnd] = useState<{ x: number; y: number } | null>(null);
+  
   const { 
     bookmarks, 
     addBookmark, 
@@ -41,6 +45,9 @@ const QuranPage: React.FC<QuranPageProps> = ({
 
   // Get Juz and Hizb info for current page
   const juzHizbInfo = getJuzHizbInfo(currentPage);
+
+  // Minimum swipe distance (in pixels)
+  const minSwipeDistance = 50;
 
   useEffect(() => {
     setImageLoaded(false);
@@ -109,6 +116,56 @@ const QuranPage: React.FC<QuranPageProps> = ({
     }
   };
 
+  // Touch event handlers for swipe navigation
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart({
+      x: e.targetTouches[0].clientX,
+      y: e.targetTouches[0].clientY
+    });
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd({
+      x: e.targetTouches[0].clientX,
+      y: e.targetTouches[0].clientY
+    });
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distanceX = touchStart.x - touchEnd.x;
+    const distanceY = touchStart.y - touchEnd.y;
+    const isHorizontalSwipe = Math.abs(distanceX) > Math.abs(distanceY);
+    
+    if (isHorizontalSwipe && Math.abs(distanceX) > minSwipeDistance) {
+      if (distanceX > 0) {
+        // Swipe left - next page (RTL)
+        handleNextPage();
+      } else {
+        // Swipe right - previous page (RTL)
+        handlePrevPage();
+      }
+    }
+  };
+
+  // Mouse click zones for desktop navigation
+  const handleImageClick = (e: React.MouseEvent) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const clickWidth = rect.width;
+    
+    // Divide image into three zones: left (30%), center (40%), right (30%)
+    if (clickX < clickWidth * 0.3) {
+      // Left zone - previous page (RTL)
+      handlePrevPage();
+    } else if (clickX > clickWidth * 0.7) {
+      // Right zone - next page (RTL)
+      handleNextPage();
+    }
+    // Center zone - no action (allows for other interactions)
+  };
   const handleKeyPress = (e: KeyboardEvent) => {
     if (e.key === 'ArrowLeft') handleNextPage();
     if (e.key === 'ArrowRight') handlePrevPage();
@@ -157,7 +214,7 @@ const QuranPage: React.FC<QuranPageProps> = ({
       {/* Desktop Header - Transparent overlay */}
       <header className={`hidden lg:block bg-white/60 backdrop-blur-sm border-b border-emerald-200/50 px-4 py-3 shadow-sm transition-all duration-300 ${
         showControls ? 'opacity-100' : 'opacity-0 pointer-events-none'
-      } absolute top-0 left-0 right-0 z-30`}>
+      } fixed top-0 left-0 right-0 z-40`}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button
@@ -234,7 +291,7 @@ const QuranPage: React.FC<QuranPageProps> = ({
       {/* Mobile Header - Transparent overlay */}
       <header className={`lg:hidden bg-white/70 backdrop-blur-sm border-b border-emerald-200/50 shadow-lg transition-all duration-300 ease-in-out ${
         showControls ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'
-      } absolute top-0 left-0 right-0 z-30`}>
+      } fixed top-0 left-0 right-0 z-40`}>
         <div className="px-4 py-3">
           <div className="flex items-center justify-between">
             <button
@@ -343,7 +400,7 @@ const QuranPage: React.FC<QuranPageProps> = ({
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 flex items-center justify-center p-2 sm:p-4 lg:p-4">
+      <main className="flex-1 flex items-center justify-center p-2 sm:p-4 lg:p-4 pt-20 lg:pt-24 pb-20 lg:pb-24">
         <div className="relative w-full max-w-4xl">
           {/* Page Image Container */}
           <div className={`relative rounded-lg sm:rounded-2xl shadow-xl sm:shadow-2xl overflow-hidden border transition-all duration-300 ${
@@ -407,8 +464,14 @@ const QuranPage: React.FC<QuranPageProps> = ({
               onLoad={() => setImageLoaded(true)}
               onError={() => setImageError(true)}
               style={{ display: imageError ? 'none' : 'block' }}
+              title="اضغط على الجانبين للتنقل أو اسحب للتنقل على الهاتف"
             />
 
+            {/* Visual hint for click zones on desktop */}
+            <div className="hidden lg:block absolute inset-0 pointer-events-none">
+              <div className="absolute left-0 top-0 w-[30%] h-full bg-gradient-to-r from-emerald-500/5 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-200"></div>
+              <div className="absolute right-0 top-0 w-[30%] h-full bg-gradient-to-l from-emerald-500/5 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-200"></div>
+            </div>
             {/* Desktop Navigation Buttons - Transparent overlay */}
 
 
@@ -450,7 +513,7 @@ const QuranPage: React.FC<QuranPageProps> = ({
       {/* Mobile Footer Navigation - Transparent overlay */}
       <footer className={`lg:hidden bg-white/70 backdrop-blur-sm border-t border-emerald-200/50 px-4 py-3 shadow-lg transition-all duration-300 ease-in-out ${
         showControls ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
-      } absolute bottom-0 left-0 right-0 z-30`}>
+      } fixed bottom-0 left-0 right-0 z-40`}>
         <div className="flex items-center justify-center gap-4">
           <button
             onClick={handlePrevPage}
@@ -490,7 +553,7 @@ const QuranPage: React.FC<QuranPageProps> = ({
       {/* Desktop Footer Navigation - Transparent overlay */}
       <footer className={`hidden lg:block bg-white/60 backdrop-blur-sm border-t border-emerald-200/50 px-4 py-3 transition-all duration-300 ${
         showControls ? 'opacity-100' : 'opacity-0 pointer-events-none'
-      } absolute bottom-0 left-0 right-0 z-30`}>
+      } fixed bottom-0 left-0 right-0 z-40`}>
         <div className="max-w-7xl mx-auto flex items-center justify-center gap-4">
           <button
             onClick={handlePrevPage}
