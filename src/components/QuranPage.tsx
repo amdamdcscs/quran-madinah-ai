@@ -463,23 +463,34 @@ const QuranPage: React.FC<QuranPageProps> = ({
               }`}
               onLoad={() => setImageLoaded(true)}
               onError={() => setImageError(true)}
-              style={{ display: imageError ? 'none' : 'block' }}
-              title="اضغط على الجانبين للتنقل أو اسحب للتنقل على الهاتف"
               onClick={handleImageClick}
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
-              style={{ 
-                display: imageError ? 'none' : 'block',
-                cursor: 'pointer'
-              }}
+              style={{ display: imageError ? 'none' : 'block' }}
+              title="اضغط على الجانبين للتنقل أو اسحب للتنقل على الهاتف"
             />
 
-            {/* Visual hint for click zones on desktop */}
-            <div className="hidden lg:block absolute inset-0 pointer-events-none">
-              <div className="absolute left-0 top-0 w-[30%] h-full bg-gradient-to-r from-emerald-500/5 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-200"></div>
-              <div className="absolute right-0 top-0 w-[30%] h-full bg-gradient-to-l from-emerald-500/5 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-200"></div>
+            {/* Click zones overlay for better navigation */}
+            <div className="absolute inset-0">
+              {/* Previous page zone (right side for RTL) */}
+              <div 
+                className="absolute right-0 top-0 w-[30%] h-full cursor-pointer hover:bg-emerald-500/10 transition-colors duration-200"
+                onClick={handlePrevPage}
+                title="الصفحة السابقة"
+              />
+              
+              {/* Next page zone (left side for RTL) */}
+              <div 
+                className="absolute left-0 top-0 w-[30%] h-full cursor-pointer hover:bg-emerald-500/10 transition-colors duration-200"
+                onClick={handleNextPage}
+                title="الصفحة التالية"
+              />
+              
+              {/* Center safe zone - no navigation */}
+              <div className="absolute left-[30%] top-0 w-[40%] h-full" />
             </div>
+            {/* Visual hint for click zones on desktop */}
             {/* Desktop Navigation Buttons - Transparent overlay */}
 
 
