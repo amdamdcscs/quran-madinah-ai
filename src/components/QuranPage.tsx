@@ -465,6 +465,14 @@ const QuranPage: React.FC<QuranPageProps> = ({
               onError={() => setImageError(true)}
               style={{ display: imageError ? 'none' : 'block' }}
               title="اضغط على الجانبين للتنقل أو اسحب للتنقل على الهاتف"
+              onClick={handleImageClick}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+              style={{ 
+                display: imageError ? 'none' : 'block',
+                cursor: 'pointer'
+              }}
             />
 
             {/* Visual hint for click zones on desktop */}
